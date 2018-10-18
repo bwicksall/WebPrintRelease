@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h2>Completed Print Jobs</h2>
+  <table class="table table-striped">
+    <tr>
+      <th class="text-center">Job</th>
+      <th>User</th>
+      <th>Document</th>
+      <th>Printer</th>
+      <th>Size</th>
+      <th>Sheets</th>
+      <th>Time completed</th>
+      <th>Status</th>
+    </tr>
+    {% for job in jobs%}
+    <tr>
+      <td class="align-middle text-center"><a href="jobs/{{job['job-id']}}" >{{job['job-id']}}</a></td>
+      <td class="align-middle">{{ job.get('job-originating-user-name', '') | truncate(12) }}</td>
+      <td class="align-middle">{{ job.get('job-name', '') | truncate(25, True) }}</td>
+      <td class="align-middle">{{ job.get('job-printer-uri', '') | queuefromuri | truncate(20, True) }}</td>
+      <td class="align-middle">{{ (job['job-k-octets']*1024) | filesizeformat }}</td>
+      <td class="align-middle">{{ job.get('job-media-sheets-completed', 0) }}</td>
+      <td class="align-middle">{{ job.get('time-at-completed', 'None') | datetimefilter }}</td>
+      <td class="align-middle">{{ job.get('job-state', 0) | jobstate }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+{% endblock %}

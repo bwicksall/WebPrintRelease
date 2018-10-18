@@ -1,0 +1,33 @@
+{% macro nav_link(endpoint, name) %}
+{% if request.endpoint.endswith(endpoint) %}
+  <li class="nav-item active"><a class="nav-link" href="{{ url_for(endpoint) }}">{{name}}</a></li>
+{% else %}
+  <li class="nav-item"><a class="nav-link" href="{{ url_for(endpoint) }}">{{name}}</a></li>
+{% endif %}
+{% endmacro %}
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="/"><i class="fa fa-print"></i> Web Print Release</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          {% if session.logged_in %}
+            {{ nav_link('jobs', 'Active Jobs') }}
+            {{ nav_link('jobscompleted', 'Completed Jobs') }}
+            {{ nav_link('printers', 'Printers') }}
+          {% endif %}
+          {{ nav_link('about', 'About') }}
+        </ul>
+        
+        <ul class="navbar-nav navbar-right">
+          {% if session.logged_in %}
+            <li class="nav-item"><a class="nav-link" href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="/login"><i class="fa fa-sign-in"></i> Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>

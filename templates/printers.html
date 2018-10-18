@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h2>Printers</h2>
+
+  {% for printer in printers%}
+  <table class="table">
+    <tr>
+      <td style="width: 40%">
+        <table class="table table-sm">
+          <tr><td class="text-right border-top-0" style="width: 7em"><strong>Printer:</strong></td><td class="align-middle border-top-0">{{ printer['printer-id'] }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>Location:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-location', '') }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>Info:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-info', '') }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>Model:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-make-and-model', 'Unknown') | truncate(40, True) }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>Type:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-type', 0) }}</td></tr>
+        </table>
+      </td>
+      <td>
+        <table class="table table-sm">
+          <tr><td class="text-right border-top-0" style="width: 10em"><strong>Shared:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-is-shared', 'Unknown') }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>State:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state', 0) | printerstate }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>State Message:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state-message', '') }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>URI Supported:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-uri-supported', '') }}</td></tr>
+          <tr><td class="text-right border-top-0"><strong>Device URI:</strong></td><td class="align-middle border-top-0">{{ printer.get('device-uri', '') }}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>  
+  {% endfor %}
+  
+{% endblock %}

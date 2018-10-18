@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h2>Active Print Jobs <a id="countdown" class="btn btn-success float-right" href="/jobs"></a></h2>
+  <table class="table table-striped">
+    <tr>
+      <th class="text-center">Job</th>
+      <th>User</th>
+      <th>Document</th>
+      <th>Printer</th>
+      <th>Size</th>
+      <th>Pages</th>
+      <th>Time submitted</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+    {% for job in jobs%}
+    <tr>
+      <td class="align-middle text-center"><a href="jobs/{{job['job-id']}}" >{{job['job-id']}}</a></td>
+      <td class="align-middle">{{ job.get('job-originating-user-name', '') | truncate(12) }}</td>
+      <td class="align-middle">{{ job.get('job-name', '') | truncate(25, True) }}</td>
+      <td class="align-middle">{{ job.get('job-printer-uri', '') | queuefromuri | truncate(20, True) }}</td>
+      <td class="align-middle">{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td>
+      <td class="align-middle">{{ job.get('page-count', 0) }}</td>
+      <td class="align-middle">{{ job.get('time-at-creation', 'None') | datetimefilter }}</td>
+      <td class="align-middle">{{ job.get('job-state', 0) | jobstate }}</td>
+      <td>
+        <form action="{{url_for('release_job', id=job['job-id'])}}" method="post">
+          <input type="hidden" name="_method" value="RELEASE">
+          <input type="submit" value="Release" class="btn btn-success">
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <script>
+  (function countdown(remaining) {
+      document.getElementById('countdown').innerHTML = '<i class="fa fa-refresh mr-1"></i> Refresh list in ' + remaining + ' seconds';
+      
+      if(remaining <= 0) {
+          location.reload(true);
+      } else {
+          setTimeout(function(){ countdown(remaining - 1); }, 1000);
+      }
+  })(60); // 60 seconds
+  </script>
+{% endblock %}
