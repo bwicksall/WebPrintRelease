@@ -1,0 +1,76 @@
+Web Print Release
+
+Web based print release for CUPS.
+
+Bits needed for Python
+----------------------
+
+Install the following:
+
+   apt-get install python-pip
+
+As the user that will be running the app install required libraries:
+
+   pip install flask
+   pip install Flask-Caching
+
+Run the app in development mode with the following command line:
+
+   python app.py
+
+Configure CUPS
+--------------
+
+Cups needs some configuration to work as a print release system.  We will setup the default 
+state of new jobs to "Held", change the default visibility of job names and modify default 
+cups permissions to limit who can release jobs. We will also tweak PolicyKit to allow the 
+print release user to release jobs.
+
+First lets force new print jobs into a held state. This needs to be done for each printer 
+on the server:
+
+   lpadmin -p HP-LaserJet-400-M401 -o job-hold-until-default=indefinite
+
+By default the print release user can't see job information for other users. To allow the 
+display of job names and user names edit /etc/cups/cupsd.conf and edit the following:
+
+<Policy default>
+  JobPrivateAccess default
+  JobPrivateValues none
+
+Add the  print release user to the lpadmin group:
+
+   usermod -G lpadmin -a printrelease
+
+To allow the print release user (members of the lpadmin group) to release jobs they don't 
+own create /etc/polkit-1/localauthority/50-local.d/allow-job-not-owned-edit.pkla with the 
+following contents:
+
+[Print job release not owned allow]
+Identity=unix-group:lpadmin
+Action=org.opensuse.cupspkhelper.mechanism.job-not-owned-edit
+ResultAny=yes
+ResultInactive=yes
+ResultActive=yes
+
+Now we need to edit /etc/cups/cupsd.conf and remove some rights from OWNER. To do that we 
+create a new group under the default and authenticated policy and MOVE Release-Job 
+Restart-Job Resume-Job Set-Job-Attributes to that group.  Notice only @SYSTEM has access 
+to these actions. @SYSTEM refers to the lpadmin group:
+
+Inside <Policy default>:
+
+  <Limit Release-Job Restart-Job Resume-Job Set-Job-Attributes>
+    Require user @SYSTEM
+    Order deny,allow
+  </Limit>
+
+Inside <Policy authenticated>:
+
+  <Limit Release-Job Restart-Job Resume-Job Set-Job-Attributes>
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  </Limit>
+
+Note: Set-Job-Attributes is actually the key permission used here.
