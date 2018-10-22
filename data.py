@@ -110,10 +110,16 @@ def getPrinterList():
 
 def releaseJob(job_id):
     
-    conn = cups.Connection()
+    try:
+        conn = cups.Connection()
+    except RuntimeError, e:
+        return e.message
 
     # Release the job
-    jobs = conn.setJobHoldUntil(job_id, 'no-hold')
+    try:
+        jobs = conn.setJobHoldUntil(job_id, 'no-hold')
+    except cups.IPPError, (status, description):
+        return description
     
     return
                                 

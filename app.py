@@ -101,7 +101,7 @@ def jobs():
 @is_logged_in
 def jobscompleted():
     Jobs = getPrintJobs('completed')
-    
+
     if Jobs:
         return render_template('jobscompleted.html', jobs = Jobs)
     else:
@@ -117,9 +117,13 @@ def job(id):
 @app.route('/release_job/<int:id>', methods=['POST'])
 @is_logged_in
 def release_job(id):
-    releaseJob(id)
-    
-    flash('Job ' + str(id) + ' Released', 'success')
+    error = releaseJob(id)
+
+    if error:
+        flash('Error: ' + error, 'danger')
+    else:
+        flash('Job ' + str(id) + ' Released', 'success')
+
     return redirect(url_for('jobs'))
 
 @app.route('/printers')
