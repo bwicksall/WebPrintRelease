@@ -9,26 +9,26 @@ import config
 app = Flask(__name__)
 cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': '/tmp/webprint'})
 
-def is_number(s):
+def is_number( s ):
     try:
-        float(s)
+        float( s )
         return True
     except:
         return False
     
 @app.template_filter()
-def datetimefilter(value, format='%Y/%m/%d %I:%M %p'):
-    if is_number(value):
-        ts = int(value)
+def datetimefilter( value, format='%Y/%m/%d %I:%M %p' ):
+    if is_number( value ):
+        ts = int( value )
 
-        return datetime.fromtimestamp(ts).strftime(format)
+        return datetime.fromtimestamp(ts).strftime( format )
     else:
         return value
 
 app.jinja_env.filters['datetimefilter'] = datetimefilter
 
 @app.template_filter()
-def jobstate(value):
+def jobstate( value ):
     states = {  3:'Pending',
                 4:'Held', 
                 5:'Printing',
@@ -38,12 +38,12 @@ def jobstate(value):
                 9:'Completed'
              }
     
-    return states.get(value, 'Unknown')
+    return states.get( value, 'Unknown' )
 
 app.jinja_env.filters['jobstate'] = jobstate
 
 @app.template_filter()
-def printerstate(value):
+def printerstate( value ):
     states = {  3:'Idle',
                 4:'Processing',
                 5:'Stopped'
@@ -55,7 +55,7 @@ app.jinja_env.filters['printerstate'] = printerstate
 
 @app.template_filter()
 def queuefromuri(value):
-    offset = value.rfind('/')
+    offset = value.rfind( '/' )
     name = value[offset + 1:]
     
     return name
@@ -73,23 +73,27 @@ def is_logged_in(f):
             return redirect(url_for('login'))
     return wrap
 
-@app.route('/favicon.ico')
+@app.route( '/favicon.ico' )
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory( os.path.join( app.root_path, 'static' ),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon' )
 
-@app.route('/')
+@app.route( '/' )
 def index():
-    return render_template('home.html')
+    return render_template( 'home.html' )
 
-@app.route('/about')
+@app.route( '/about' )
 def about():
-    return render_template('about.html')
+    return render_template( 'about.html' )
 
-@app.route('/jobs')
+@app.route( '/jobs' )
 @is_logged_in
 def jobs():
-    Jobs = getPrintJobs('not-completed')
+    
+    try:
+        Jobs = getPrintJobs( 'not-completed' )
+    except Exception as e:
+        return render_template( 'jobs.html', error = e.message )
     
     if Jobs:
         return render_template('jobs.html', jobs = Jobs)
@@ -97,48 +101,63 @@ def jobs():
         msg = 'No Print Jobs in Queue'
         return render_template('jobs.html', msg = msg)
 
-@app.route('/jobscompleted')
+@app.route( '/jobscompleted' )
 @is_logged_in
 def jobscompleted():
-    Jobs = getPrintJobs('completed')
+    
+    try:
+        Jobs = getPrintJobs( 'completed' )
+    except Exception as e:
+        return render_template( 'jobscompleted.html', error = e.message )
 
     if Jobs:
-        return render_template('jobscompleted.html', jobs = Jobs)
+        return render_template( 'jobscompleted.html', jobs = Jobs )
     else:
         msg = 'No Print Jobs History'
-        return render_template('jobscompleted.html', msg = msg)
+        return render_template( 'jobscompleted.html', msg = msg )
 
-@app.route('/jobs/<int:id>')
+@app.route( '/jobs/<int:id>' )
 @is_logged_in
-def job(id):
-    Job = getPrintJob(id)
-    return render_template('job.html', job=Job)
-
-@app.route('/release_job/<int:id>', methods=['POST'])
-@is_logged_in
-def release_job(id):
-    error = releaseJob(id)
-
-    if error:
-        flash('Error: ' + error, 'danger')
+def job( id ):
+    
+    try:
+        Job = getPrintJob( id )
+    except Exception as e:
+        return render_template( 'job.html', error = e.message )
     else:
-        flash('Job ' + str(id) + ' Released', 'success')
+        return render_template( 'job.html', job=Job )
 
-    return redirect(url_for('jobs'))
+@app.route( '/release_job/<int:id>', methods=['POST'] )
+@is_logged_in
+def release_job( id ):
+    
+    try:
+        releaseJob( id )
+    except Exception as e:
+        flash( e.message, 'danger' )
+    else:
+        flash( 'Job ' + str(id) + ' Released', 'success' )
 
-@app.route('/printers')
+    return redirect( url_for( 'jobs' ) )
+
+@app.route( '/printers' )
 @is_logged_in
 def printers():
-    Printers = getPrinterList()
+    
+    try:
+        Printers = getPrinterList()
+    except Exception as e:
+        return render_template( 'printers.html', error = e.message )
     
     if Printers:
-        return render_template('printers.html', printers = Printers)
+        return render_template( 'printers.html', printers = Printers )
     else:
         msg = 'No Prints Configured'
-        return render_template('printers.html', msg = msg)
+        return render_template( 'printers.html', msg = msg )
 
-@app.route('/login', methods=['GET','POST'])
+@app.route( '/login', methods=['GET','POST'] )
 def login():
+    
     if request.method == 'POST':
         # Get Form Fields
         username = request.form['username']
@@ -163,6 +182,7 @@ def login():
 @app.route('/logout')
 @is_logged_in
 def logout():
+    
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
