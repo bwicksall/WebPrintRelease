@@ -91,12 +91,12 @@ def about():
 def jobs():
     
     # Get advanced session values
-    advanced = session.get('advanced', 0)
-    advanced_start = session.get('advanced_start', 0)
+    advanced = session.get( 'advanced', 0 )
+    advanced_start = session.get( 'advanced_start', datetime.now() )
     
     # Check how long you have been in advanced mode.  Toggle off if greater than 5 minutes.
     time_now = datetime.now()
-    if time_now - advanced_start > timedelta(minutes=5):
+    if time_now - advanced_start > timedelta( minutes=5 ):
         advanced = 0
         session['advanced'] = 0
     
