@@ -4,10 +4,12 @@ from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterLis
 from functools import wraps
 from datetime import datetime, timedelta
 from cache import cache
+import os
 import config
 
 app = Flask(__name__)
 cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': '/tmp/webprint'})
+app.secret_key=config.SECRET_KEY
 
 def is_number( s ):
     try:
@@ -234,5 +236,4 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.secret_key=config.SECRET_KEY
     app.run(host=config.HOST, port=int(config.PORT), debug=config.DEBUG)
