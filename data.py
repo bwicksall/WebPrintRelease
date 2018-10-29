@@ -141,3 +141,18 @@ def releaseJob( job_id ):
         return
 
     return
+
+def cancelJob( job_id ):
+
+    try:
+        conn = cups.Connection()
+        # Cancel the job.  False just cancels.  True cancels and purges the job from history.
+        jobs = conn.cancelJob( job_id, False )
+    except RuntimeError as e:
+        raise Exception( 'Error: ' + e.message )
+        return
+    except cups.IPPError as ( status, description ):
+        raise Exception( 'Error: ' + description )
+        return
+
+    return

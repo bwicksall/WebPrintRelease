@@ -29,10 +29,26 @@
           <input type="hidden" name="_method" value="RELEASE">
           <input type="submit" value="Release" class="btn btn-success">
         </form>
+        {% if advanced > 0 %}
+        <br>
+        <form action="{{ url_for('cancel_job', id=job['job-id']) }}" method="post">
+          <input type="hidden" name="_method" value="CANCEL">
+          <input type="submit" value="Cancel" class="btn btn-danger">
+        </form>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
   </table>
+  <br>
+  <div class="float-right">
+  <form action="{{ url_for( 'set_advanced' ) }}" method="post">
+      <input type="hidden" name="_method" value="SETADVANCED">
+      <input type="submit" value="Toggle advanced mode {{ next_mode }}" class="btn btn-danger">
+  </form>
+  </div>
+  <br>
+  <br>
   
   <script>
   (function countdown(remaining) {

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, send_from_directory
-from data import getPrintJobs, getPrintJob, releaseJob, getPrinterList
+from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterList
 #from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, timedelta
 from cache import cache
 import config
 
@@ -90,13 +90,30 @@ def about():
 @is_logged_in
 def jobs():
     
+    # Get advanced session values
+    advanced = session.get('advanced', 0)
+    advanced_start = session.get('advanced_start', 0)
+    
+    # Check how long you have been in advanced mode.  Toggle off if greater than 5 minutes.
+    time_now = datetime.now()
+    if time_now - advanced_start > timedelta(minutes=5):
+        advanced = 0
+        session['advanced'] = 0
+    
+    # Used in the template to update advanced button text
+    if advanced == 0:
+        next_mode = 'on'
+    else:
+        next_mode = 'off'
+    
+    # Go ahead and get the print jobs
     try:
         Jobs = getPrintJobs( 'not-completed' )
     except Exception as e:
         return render_template( 'jobs.html', error = e.message )
     
     if Jobs:
-        return render_template('jobs.html', jobs = Jobs)
+        return render_template('jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode )
     else:
         msg = 'No Print Jobs in Queue'
         return render_template('jobs.html', msg = msg)
@@ -137,6 +154,35 @@ def release_job( id ):
         flash( e.message, 'danger' )
     else:
         flash( 'Job ' + str(id) + ' Released', 'success' )
+
+    return redirect( url_for( 'jobs' ) )
+
+@app.route( '/cancel_job/<int:id>', methods=['POST'] )
+@is_logged_in
+def cancel_job( id ):
+    
+    try:
+        cancelJob( id )
+    except Exception as e:
+        flash( e.message, 'danger' )
+    else:
+        flash( 'Job ' + str(id) + ' Cancelled', 'success' )
+
+    return redirect( url_for( 'jobs' ) )
+
+@app.route( '/set_advanced', methods=['POST'] )
+@is_logged_in
+def set_advanced():
+    
+    # Get current advaned state
+    advanced = session.get('advanced', 0)
+    
+    # Are we toggling on or off?
+    if advanced == 0:
+        session['advanced'] = 1
+        session['advanced_start'] = datetime.now()
+    else:
+        session['advanced'] = 0
 
     return redirect( url_for( 'jobs' ) )
 
