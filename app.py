@@ -113,10 +113,10 @@ def jobs():
         return render_template( 'jobs.html', error = e.message )
     
     if Jobs:
-        return render_template('jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode )
+        return render_template( 'jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode )
     else:
         msg = 'No Print Jobs in Queue'
-        return render_template('jobs.html', msg = msg)
+        return render_template( 'jobs.html', msg = msg, advanced = advanced, next_mode = next_mode )
 
 @app.route( '/jobscompleted' )
 @is_logged_in
