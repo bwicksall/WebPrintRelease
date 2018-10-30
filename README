@@ -23,6 +23,39 @@ Run the app with gunicorn for production:
 
    /home/printrelease/.local/bin/gunicorn -w 4 -b 0.0.0.0:4000 app:app
 
+Configure WebPrintRelease to run as a service
+---------------------------------------------
+
+We will use Gunicorn as the web server for WebPrint Release.
+
+As root create a new service file:
+
+   vi /etc/systemd/system/WebPrintRelease.service
+
+Paste the following into the file:
+
+   [Unit]
+   Description=Gunicorn instance to serve WebPrintRelease
+   After=network.target
+
+   [Service]
+   User=printrelease
+   Restart=on-failure
+   WorkingDirectory=/home/printrelease/WebPrintRelease/
+   ExecStart=/home/printrelease/.local/bin/gunicorn -w 2 -b 0.0.0.0:8080 app:app
+
+   [Install]
+   WantedBy=multi-user.target
+
+Reload services, enable and start WebPrintRelease:
+
+   systemctl daemon-reload
+   systemctl enable WebPrintRelease
+   systemctl start WebPrintRelease
+
+Note: If the main page is slower that expected delete /tmp/webprint and restart service.
+The folder may have been created by a different user and ownership is wrong.
+
 Configure CUPS
 --------------
 
