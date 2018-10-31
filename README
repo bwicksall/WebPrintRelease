@@ -7,7 +7,7 @@ Bits needed for Python
 
 Install the following:
 
-   apt-get install python-pip
+   apt-get install python-pip python-cups pkpgcounter
 
 As the user that will be running the app install required libraries:
 
