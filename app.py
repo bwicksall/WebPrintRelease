@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, url_for, session, req
 from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterList
 #from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from cache import cache
 import os
 import config
@@ -17,7 +17,7 @@ def is_number( s ):
         return True
     except:
         return False
-    
+
 @app.template_filter()
 def datetimefilter( value, format='%Y/%m/%d %I:%M %p' ):
     if is_number( value ):
@@ -59,7 +59,7 @@ app.jinja_env.filters['printerstate'] = printerstate
 def queuefromuri(value):
     offset = value.rfind( '/' )
     name = value[offset + 1:]
-    
+
     return name
 
 app.jinja_env.filters['queuefromuri'] = queuefromuri
@@ -91,11 +91,11 @@ def about():
 @app.route( '/jobs' )
 @is_logged_in
 def jobs():
-    
+
     # Get advanced session values
     advanced = session.get( 'advanced', 0 )
     advanced_start = session.get( 'advanced_start', datetime.now() )
-    
+
     # Check how long you have been in advanced mode.  Toggle off if greater than 5 minutes.
     time_now = datetime.now()
     if time_now - advanced_start > timedelta( minutes=5 ):
@@ -123,14 +123,37 @@ def jobs():
 @app.route( '/jobscompleted' )
 @is_logged_in
 def jobscompleted():
-    
+
     try:
         Jobs = getPrintJobs( 'completed' )
     except Exception as e:
         return render_template( 'jobscompleted.html', error = e.message )
 
     if Jobs:
-        return render_template( 'jobscompleted.html', jobs = Jobs )
+        filters = request.args.get('filters')
+        daterange = request.args.get('daterange')
+
+        if daterange == None:
+            # No date range provided so lets build one that spans 30 days
+            startdate = datetime.now() - timedelta(days=30)
+            enddate = datetime.now() + timedelta(days=1)
+            daterange = startdate.strftime('%m/%d/%Y') + ' - ' + datetime.now().strftime('%m/%d/%Y')
+        else:
+            # We have a date range so lets parse it
+            str_startdate,str_enddate = daterange.split(' - ')
+
+            startdate = datetime.strptime(str_startdate, '%m/%d/%Y')
+            enddate = datetime.strptime(str_enddate, '%m/%d/%Y') + timedelta(days=1)
+
+        if filters == None:
+            # No filters so we will just limit on date range
+            filtered_jobs = list( filter( lambda d: startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate, Jobs ) )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange )
+        else:
+            # We have filters so filter and limit on date range
+            StateList = [9] # == completed
+            filtered_jobs = list( filter( lambda d: ( d['job-state'] in StateList ) and ( startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate ), Jobs ) )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange )
     else:
         msg = 'No Print Jobs History'
         return render_template( 'jobscompleted.html', msg = msg )
@@ -138,7 +161,7 @@ def jobscompleted():
 @app.route( '/jobs/<int:id>' )
 @is_logged_in
 def job( id ):
-    
+
     try:
         Job = getPrintJob( id )
     except Exception as e:
@@ -149,7 +172,7 @@ def job( id ):
 @app.route( '/release_job/<int:id>', methods=['POST'] )
 @is_logged_in
 def release_job( id ):
-    
+
     try:
         releaseJob( id )
     except Exception as e:
@@ -162,7 +185,7 @@ def release_job( id ):
 @app.route( '/cancel_job/<int:id>', methods=['POST'] )
 @is_logged_in
 def cancel_job( id ):
-    
+
     try:
         cancelJob( id )
     except Exception as e:
@@ -175,10 +198,10 @@ def cancel_job( id ):
 @app.route( '/set_advanced', methods=['POST'] )
 @is_logged_in
 def set_advanced():
-    
+
     # Get current advaned state
     advanced = session.get('advanced', 0)
-    
+
     # Are we toggling on or off?
     if advanced == 0:
         session['advanced'] = 1

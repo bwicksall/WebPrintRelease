@@ -112,3 +112,9 @@ Inside <Policy authenticated>:
   </Limit>
 
 Note: Set-Job-Attributes is actually the key permission used here.
+
+
+JS Bits Used
+------------
+
+Date Picker: http://www.daterangepicker.com/

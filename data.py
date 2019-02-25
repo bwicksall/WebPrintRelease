@@ -33,7 +33,7 @@ def getPrintJobs( which_jobs_in='not-completed' ):
     if which_jobs_in=='not-completed':
         result_limit = -1
     else:
-        result_limit = 50
+        result_limit = 100
         
     try:
         conn = cups.Connection()

@@ -2,6 +2,38 @@
 
 {% block body %}
   <h2>Completed Print Jobs</h2>
+
+  <div class="btn-group">
+    {% if filters == None %}
+      <a href="/jobscompleted?daterange={{ daterange }}" class="btn btn-primary active">Any Status</a>
+      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}" class="btn btn-primary">Completed Only</a>
+    {% else %}
+      <a href="/jobscompleted?daterange={{ daterange }}" class="btn btn-primary">Any Status</a>
+      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}" class="btn btn-primary active">Completed Only</a>
+    {% endif %}
+  </div>
+
+  <form class="form-inline float-right">
+    <div class="form-group mx-sm-3 mb-2">
+      <label for="daterange" class="sr-only">Date Range:</label>
+      <input type="text" name="daterange" id="daterange" value="{{ daterange }}" class="form-control" />
+    </div>
+    {% if filters != None %}
+    <input type="hidden" name="filters" id="filters" value="{{ filters }}" />
+    {% endif %}
+    <button type="submit" class="btn btn-primary mb-2">Go</button>
+  </form>
+
+  <script>
+  $(function() {
+    $('input[name="daterange"]').daterangepicker({
+      opens: 'left'
+    });
+  });
+  </script>
+
+  <br><br>
+
   <table class="table table-striped">
     <tr>
       <th class="text-center">Job</th>
