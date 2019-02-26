@@ -6,9 +6,11 @@ from datetime import datetime, timedelta, date
 from cache import cache
 import os
 import config
+import tempfile
 
 app = Flask(__name__)
-cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': '/tmp/webprint'})
+tempfolder = tempfile.mkdtemp(suffix='_cache', prefix='webprint_', dir='/tmp')
+cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': tempfolder})
 app.secret_key=config.SECRET_KEY
 
 def is_number( s ):
