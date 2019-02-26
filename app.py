@@ -6,10 +6,10 @@ from datetime import datetime, timedelta, date
 from cache import cache
 import os
 import config
-import tempfile
+import getpass
 
 app = Flask(__name__)
-tempfolder = tempfile.mkdtemp(suffix='_cache', prefix='webprint_', dir='/tmp')
+tempfolder = '/tmp/webprint_' + getpass.getuser()
 cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': tempfolder})
 app.secret_key=config.SECRET_KEY
 
