@@ -98,26 +98,36 @@ def jobs():
     advanced = session.get( 'advanced', 0 )
     advanced_start = session.get( 'advanced_start', datetime.now() )
 
+    # Keep track of sort order
+    sort = request.args.get('sort', 'job-originating-user-name')
+    sort_order = request.args.get('order', 'asc')
+
+    # Used to toggle sort order in template
+    if sort_order == 'asc':
+        sort_order_next = 'desc'
+    else:
+        sort_order_next = 'asc'
+
     # Check how long you have been in advanced mode.  Toggle off if greater than 5 minutes.
     time_now = datetime.now()
     if time_now - advanced_start > timedelta( minutes=5 ):
         advanced = 0
         session['advanced'] = 0
-    
+
     # Used in the template to update advanced button text
     if advanced == 0:
         next_mode = 'on'
     else:
         next_mode = 'off'
-    
+
     # Go ahead and get the print jobs
     try:
-        Jobs = getPrintJobs( 'not-completed' )
+        Jobs = getPrintJobs( 'not-completed', sort, sort_order )
     except Exception as e:
         return render_template( 'jobs.html', error = e.message )
     
     if Jobs:
-        return render_template( 'jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode )
+        return render_template( 'jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
     else:
         msg = 'No Print Jobs in Queue'
         return render_template( 'jobs.html', msg = msg, advanced = advanced, next_mode = next_mode )
@@ -204,6 +214,16 @@ def set_advanced():
     # Get current advaned state
     advanced = session.get('advanced', 0)
 
+    # Get sort order to pass to the destination page
+    sort = request.form.get('sort', None)
+    sort_order = request.form.get('sort_order', None)
+
+    # Build sort order string
+    if sort == None:
+        sort_str = ''
+    else:
+        sort_str = '?sort=' + sort + '&order=' + sort_order
+
     # Are we toggling on or off?
     if advanced == 0:
         session['advanced'] = 1
@@ -211,7 +231,7 @@ def set_advanced():
     else:
         session['advanced'] = 0
 
-    return redirect( url_for( 'jobs' ) )
+    return redirect( url_for( 'jobs' ) + sort_str )
 
 @app.route( '/printers' )
 @is_logged_in

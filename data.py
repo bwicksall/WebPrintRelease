@@ -27,7 +27,7 @@ def getPageCount( file, job_id ):
     cache.set( str( job_id ), result, timeout=3600 )
     return result
 
-def getPrintJobs( which_jobs_in='not-completed' ):
+def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name', sort_order='asc' ):
     
     # Show all active jobs but limit completed to 50
     if which_jobs_in=='not-completed':
@@ -83,8 +83,12 @@ def getPrintJobs( which_jobs_in='not-completed' ):
         joblist.append(v)
 
     if which_jobs_in=='not-completed':
-        # Sort the list by username, job-id ascending.  -k['job-id'] would be decending.
-        joblist.sort(key = lambda k: ( k['job-originating-user-name'], k['job-id'] ) ) 
+        if sort_order == 'asc':
+            # Sort the list by username, job-id ascending.  -k['job-id'] would be decending.
+            joblist.sort(key = lambda k: ( k[sort], k['job-id'] ) )
+        else:
+            # Sort Desc
+            joblist.sort(key = lambda k: ( k[sort] ), reverse=True )
     else:
         # Sort the list by time-at-completed decending.
         joblist.sort(key = lambda k: -k['time-at-completed'] )
