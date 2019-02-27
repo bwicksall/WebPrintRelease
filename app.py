@@ -192,7 +192,17 @@ def release_job( id ):
     else:
         flash( 'Job ' + str(id) + ' Released', 'success' )
 
-    return redirect( url_for( 'jobs' ) )
+    # Get sort order to pass to the destination page
+    sort = request.form.get('sort', None)
+    sort_order = request.form.get('sort_order', None)
+
+    # Build sort order string
+    if sort == None:
+        sort_str = ''
+    else:
+        sort_str = '?sort=' + sort + '&order=' + sort_order
+
+    return redirect( url_for( 'jobs' )  + sort_str )
 
 @app.route( '/cancel_job/<int:id>', methods=['POST'] )
 @is_logged_in
@@ -205,7 +215,17 @@ def cancel_job( id ):
     else:
         flash( 'Job ' + str(id) + ' Cancelled', 'success' )
 
-    return redirect( url_for( 'jobs' ) )
+    # Get sort order to pass to the destination page
+    sort = request.form.get('sort', None)
+    sort_order = request.form.get('sort_order', None)
+
+    # Build sort order string
+    if sort == None:
+        sort_str = ''
+    else:
+        sort_str = '?sort=' + sort + '&order=' + sort_order
+
+    return redirect( url_for( 'jobs' )  + sort_str )
 
 @app.route( '/set_advanced', methods=['POST'] )
 @is_logged_in

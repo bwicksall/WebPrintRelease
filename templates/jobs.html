@@ -41,12 +41,16 @@
       <td>
         <form action="{{url_for('release_job', id=job['job-id'])}}" method="post">
           <input type="hidden" name="_method" value="RELEASE">
+          <input type="hidden" name="sort" value="{{ sort }}">
+          <input type="hidden" name="sort_order" value="{{ sort_order }}">
           <input type="submit" value="Release" class="btn btn-success">
         </form>
         {% if advanced > 0 %}
         <br>
         <form action="{{ url_for('cancel_job', id=job['job-id']) }}" method="post">
           <input type="hidden" name="_method" value="CANCEL">
+          <input type="hidden" name="sort" value="{{ sort }}">
+          <input type="hidden" name="sort_order" value="{{ sort_order }}">
           <input type="submit" value="Cancel" class="btn btn-danger">
         </form>
         {% endif %}
