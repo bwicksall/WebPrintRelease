@@ -2,6 +2,7 @@ import cups
 import json
 import subprocess
 import os
+import config
 from cache import cache
 
 def getPageCount( file, job_id ):
@@ -29,11 +30,11 @@ def getPageCount( file, job_id ):
 
 def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name', sort_order='asc' ):
     
-    # Show all active jobs but limit completed to 50
+    # Show all active jobs but limit completed.  Set limit in config.py
     if which_jobs_in=='not-completed':
         result_limit = -1
     else:
-        result_limit = 100
+        result_limit = config.COMPLETED_LIMIT
         
     try:
         conn = cups.Connection()

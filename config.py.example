@@ -4,3 +4,4 @@ USERNAME = 'admin'
 PASSWORD = 'YourPasswordHere'
 HOST = '0.0.0.0'
 PORT = 8888
+COMPLETED_LIMIT = 250
