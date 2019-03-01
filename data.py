@@ -34,7 +34,11 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
     if which_jobs_in=='not-completed':
         result_limit = -1
     else:
-        result_limit = config.COMPLETED_LIMIT
+        try:
+            result_limit = config.COMPLETED_LIMIT
+        except:
+            # use a safe default
+            result_limit = 100
         
     try:
         conn = cups.Connection()
