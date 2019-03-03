@@ -1,15 +1,23 @@
 {% extends 'layout.html' %}
 
+{% macro sort_link(column, title, sort, order_next, filters, daterange) %}
+{% if column == sort %}
+  <a href="/jobscompleted?filters={{ filters }}&daterange={{ daterange }}&sort={{ column }}&order={{ order_next }}">{{ title }}</a>
+{% else %}
+  <a href="/jobscompleted?filters={{ filters }}&daterange={{ daterange }}&sort={{ column }}&order=asc">{{ title }}</a>
+{% endif %}
+{% endmacro %}
+
 {% block body %}
   <h2>Job History</h2>
 
   <div class="btn-group">
-    {% if filters == None %}
-      <a href="/jobscompleted?daterange={{ daterange }}" class="btn btn-primary active">Any Status</a>
-      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}" class="btn btn-primary">Completed Only</a>
+    {% if filters == 'none' %}
+      <a href="/jobscompleted?filters=none&daterange={{ daterange }}&sort={{ sort }}&order={{ sort_order }}" class="btn btn-primary active">Any Status</a>
+      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}&sort={{ sort }}&order={{ sort_order }}" class="btn btn-primary">Completed Only</a>
     {% else %}
-      <a href="/jobscompleted?daterange={{ daterange }}" class="btn btn-primary">Any Status</a>
-      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}" class="btn btn-primary active">Completed Only</a>
+      <a href="/jobscompleted?filters=none&daterange={{ daterange }}&sort={{ sort }}&order={{ sort_order }}" class="btn btn-primary">Any Status</a>
+      <a href="/jobscompleted?filters=printed&daterange={{ daterange }}&sort={{ sort }}&order={{ sort_order }}" class="btn btn-primary active">Completed Only</a>
     {% endif %}
   </div>
 
@@ -18,9 +26,9 @@
       <label for="daterange" class="sr-only">Date Range:</label>
       <input type="text" name="daterange" id="daterange" value="{{ daterange }}" class="form-control" />
     </div>
-    {% if filters != None %}
     <input type="hidden" name="filters" id="filters" value="{{ filters }}" />
-    {% endif %}
+    <input type="hidden" name="sort" id="sort" value="{{ sort }}" />
+    <input type="hidden" name="order" id="order" value="{{ sort_order }}" />
     <button type="submit" class="btn btn-primary mb-2">Go</button>
   </form>
 
@@ -37,13 +45,13 @@
   <table class="table table-striped">
     <tr>
       <th class="text-center">Job</th>
-      <th>User</th>
-      <th>Document</th>
-      <th>Printer</th>
-      <th>Size</th>
-      <th>Sheets</th>
-      <th>Time completed</th>
-      <th>Status</th>
+      <th>{{ sort_link('job-originating-user-name', 'User', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-name', 'Document', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-printer-uri', 'Printer', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-k-octets', 'Size', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-media-sheets-completed', 'Pages', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('time-at-completed', 'Time completed', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-state', 'Status', sort, sort_order_next, filters, daterange) }}</th>
     </tr>
     {% for job in jobs%}
     <tr>

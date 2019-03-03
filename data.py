@@ -11,7 +11,7 @@ def getPageCount( file, job_id ):
     # Use str(job_id) as the key cause file changes every time
     cached = cache.get( str( job_id ) )
     if cached:
-        return cached
+        return int( cached )
     
     # Use pkpgcounter to get page count
     args = ( "pkpgcounter", file )
@@ -22,11 +22,11 @@ def getPageCount( file, job_id ):
         pageCount = popen.stdout.read()
         result = pageCount.strip()
     except:
-        result = 'Error'
+        result = '0'
     
     # Set the cache and return the result.  1 Hour timeout
     cache.set( str( job_id ), result, timeout=3600 )
-    return result
+    return int( result )
 
 def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name', sort_order='asc' ):
     
@@ -87,16 +87,12 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
 
         joblist.append(v)
 
-    if which_jobs_in=='not-completed':
-        if sort_order == 'asc':
-            # Sort the list by username, job-id ascending.  -k['job-id'] would be decending.
-            joblist.sort(key = lambda k: ( k[sort], k['job-id'] ) )
-        else:
-            # Sort Desc
-            joblist.sort(key = lambda k: ( k[sort] ), reverse=True )
+    if sort_order == 'asc':
+        # Sort the list by username, job-id ascending.  -k['job-id'] would be decending.
+        joblist.sort(key = lambda k: k[sort] )
     else:
-        # Sort the list by time-at-completed decending.
-        joblist.sort(key = lambda k: -k['time-at-completed'] )
+        # Sort Desc
+        joblist.sort(key = lambda k: k[sort], reverse=True )
 
     return joblist
 

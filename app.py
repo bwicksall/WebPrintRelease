@@ -136,13 +136,23 @@ def jobs():
 @is_logged_in
 def jobscompleted():
 
+    # Keep track of sort order
+    sort = request.args.get('sort', 'time-at-completed')
+    sort_order = request.args.get('order', 'desc')
+
+    # Used to toggle sort order in template
+    if sort_order == 'asc':
+        sort_order_next = 'desc'
+    else:
+        sort_order_next = 'asc'
+
     try:
-        Jobs = getPrintJobs( 'completed' )
+        Jobs = getPrintJobs( 'completed', sort, sort_order )
     except Exception as e:
         return render_template( 'jobscompleted.html', error = e.message )
 
     if Jobs:
-        filters = request.args.get('filters')
+        filters = request.args.get('filters', 'none')
         daterange = request.args.get('daterange')
 
         if daterange == None:
@@ -157,15 +167,15 @@ def jobscompleted():
             startdate = datetime.strptime(str_startdate, '%m/%d/%Y')
             enddate = datetime.strptime(str_enddate, '%m/%d/%Y') + timedelta(days=1)
 
-        if filters == None:
+        if filters == 'none':
             # No filters so we will just limit on date range
             filtered_jobs = list( filter( lambda d: startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate, Jobs ) )
-            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
         else:
             # We have filters so filter and limit on date range
             StateList = [9] # == completed
             filtered_jobs = list( filter( lambda d: ( d['job-state'] in StateList ) and ( startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate ), Jobs ) )
-            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
     else:
         msg = 'No Print Jobs History'
         return render_template( 'jobscompleted.html', msg = msg )
