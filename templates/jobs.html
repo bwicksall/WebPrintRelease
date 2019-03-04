@@ -3,6 +3,11 @@
 {% macro sort_link(column, title, sort, order_next) %}
 {% if column == sort %}
   <a href="/jobs?sort={{ column }}&order={{ order_next }}">{{ title }}</a>
+  {% if order_next == 'desc' %}
+    <i class="fa fa-sort-up"></i>
+  {% else %}
+    <i class="fa fa-sort-down"></i>
+  {% endif %}
 {% else %}
   <a href="/jobs?sort={{ column }}&order=asc">{{ title }}</a>
 {% endif %}

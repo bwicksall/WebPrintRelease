@@ -3,6 +3,11 @@
 {% macro sort_link(column, title, sort, order_next, filters, daterange) %}
 {% if column == sort %}
   <a href="/jobscompleted?filters={{ filters }}&daterange={{ daterange }}&sort={{ column }}&order={{ order_next }}">{{ title }}</a>
+  {% if order_next == 'desc' %}
+    <i class="fa fa-sort-up"></i>
+  {% else %}
+    <i class="fa fa-sort-down"></i>
+  {% endif %}
 {% else %}
   <a href="/jobscompleted?filters={{ filters }}&daterange={{ daterange }}&sort={{ column }}&order=asc">{{ title }}</a>
 {% endif %}
@@ -53,7 +58,7 @@
       <th>{{ sort_link('time-at-completed', 'Time completed', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('job-state', 'Status', sort, sort_order_next, filters, daterange) }}</th>
     </tr>
-    {% for job in jobs%}
+    {% for job in jobs %}
     <tr>
       <td class="align-middle text-center"><a href="jobs/{{job['job-id']}}" >{{job['job-id']}}</a></td>
       <td class="align-middle">{{ job.get('job-originating-user-name', '') | truncate(12) }}</td>
