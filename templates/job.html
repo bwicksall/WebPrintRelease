@@ -10,6 +10,7 @@
     <tr><td class="text-right"><strong>Job state reasons:</strong></td><td>{{ job.get('job-state-reasons', '') }}</td></tr>
     <tr><td class="text-right"><strong>Pages:</strong></td><td>{{ job.get('page-count', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Sheets completed:</strong></td><td>{{ job.get('job-media-sheets-completed', 0) }}</td></tr>
+    <tr><td class="text-right"><strong>Duplex:</strong></td><td>{{ job.get('Duplex', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Number of documents:</strong></td><td>{{ job.get('number-of-documents', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Job size:</strong></td><td>{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td></tr>    
     <tr><td class="text-right"><strong>Job size processed:</strong></td><td>{{ (job.get('job-k-octets-processed',0)*1024) | filesizeformat }}</td></tr>

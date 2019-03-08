@@ -52,7 +52,8 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
              "job-k-octets",
              "time-at-creation",
              "job-media-sheets-completed",
-             "time-at-completed"
+             "time-at-completed",
+             "Duplex"
             ]
 
         # Get all jobs
