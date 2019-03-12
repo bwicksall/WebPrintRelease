@@ -20,7 +20,7 @@
     <tr><td class="text-right"><strong>Created time:</strong></td><td>{{ job.get('time-at-creation', o) | datetimefilter }}</td></tr>
     <tr><td class="text-right"><strong>Processing time:</strong></td><td>{{ job.get('time-at-processing', 0) | datetimefilter }}</td></tr>
     <tr><td class="text-right"><strong>Completed time:</strong></td><td>{{ job.get('time-at-completed', 0) | datetimefilter }}</td></tr>
-    <tr><td class="text-right"><strong>Page size:</strong></td><td>{{ job.get('PageSize', '') }}</td></tr>
+    <tr><td class="text-right"><strong>Page size:</strong></td><td>{{ job.get('PageSize', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Printer:</strong></td><td>{{ job.get('job-printer-uri', '') }}</td></tr>
     <tr><td class="text-right"><strong>Printer uptime:</strong></td><td>{{ job.get('job-printer-up-time', 0) | datetimefilter }}</td></tr>
    </table>

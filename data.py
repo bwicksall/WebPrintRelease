@@ -101,8 +101,32 @@ def getPrintJob( job_id ):
 
     try:
         conn = cups.Connection()
+
+        # Just retrieve these attributes.  'All' was sometimes returning partial reselt sets.
+        r = ["job-id",
+             "job-name",
+             "job-originating-user-name",
+             "job-state",
+             "job-state-reasons",
+             "page-count",
+             "job-media-sheets-completed",
+             "Duplex",
+             "number-of-documents",
+             "job-k-octets",
+             "job-k-octets-processed",
+             "job-uri",
+             "job-hold-until",
+             "job-priority",
+             "time-at-creation",
+             "time-at-processing",
+             "time-at-completed",
+             "PageSize",
+             "job-printer-uri",
+             "job-printer-up-time"
+            ]
+
         # Get a job
-        job = conn.getJobAttributes( job_id=job_id, requested_attributes=['all'] )
+        job = conn.getJobAttributes( job_id=job_id, requested_attributes=r )
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
