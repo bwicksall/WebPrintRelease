@@ -1,0 +1,19 @@
+Some things to keep in mind when using this app.
+
+1) This was written in Pyton 2 in an environment where it will only be used on Debian 9.  
+
+Obiously I need to think about upgrading this to Python 3 in the future.  
+
+2) pkpgcounter is used to count pages
+
+This tool seems to be largely abandoned and it looks like it is being dropped from 
+some distros.  That is too bad because this tool seems to do a really good job
+of counting pages for all kinds of document.  
+
+Alternatively we may use a tool like pdfinfo to count pages in PDFs.  This would limit 
+our printing options a bit although it is not impossible.
+
+What other tools are there for page counting?  What is the best rout?
+
+Is pkpgcounter in Debian Buster?
+
