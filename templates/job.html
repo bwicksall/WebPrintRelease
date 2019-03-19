@@ -6,11 +6,15 @@
    <table class="table table-striped table-sm">
     <tr><td class="text-right"><strong>Job name:</strong></td><td>{{ job.get('job-name', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>User:</strong></td><td>{{ job.get('job-originating-user-name', 'Unknown') }}</td></tr>
+    <tr><td class="text-right"><strong>Hostname:</strong></td><td>{{ job.get('job-originating-host-name', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Job state:</strong></td><td>{{ job.get('job-state', 0) | jobstate }}</td></tr>
     <tr><td class="text-right"><strong>Job state reasons:</strong></td><td>{{ job.get('job-state-reasons', '') }}</td></tr>
     <tr><td class="text-right"><strong>Pages:</strong></td><td>{{ job.get('page-count', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Sheets completed:</strong></td><td>{{ job.get('job-media-sheets-completed', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Duplex:</strong></td><td>{{ job.get('Duplex', 'Unknown') }}</td></tr>
+    <tr><td class="text-right"><strong>Format:</strong></td><td>{{ job.get('document-format', 'Unknown') }}</td></tr>
+    <tr><td class="text-right"><strong>Format Detected:</strong></td><td>{{ job.get('document-format-detected', 'Unknown') }}</td></tr>
+    <tr><td class="text-right"><strong>Format Supplied:</strong></td><td>{{ job.get('document-format-supplied', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Number of documents:</strong></td><td>{{ job.get('number-of-documents', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Job size:</strong></td><td>{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td></tr>    
     <tr><td class="text-right"><strong>Job size processed:</strong></td><td>{{ (job.get('job-k-octets-processed',0)*1024) | filesizeformat }}</td></tr>

@@ -106,6 +106,7 @@ def getPrintJob( job_id ):
         r = ["job-id",
              "job-name",
              "job-originating-user-name",
+             "job-originating-host-name",
              "job-state",
              "job-state-reasons",
              "page-count",
@@ -122,7 +123,10 @@ def getPrintJob( job_id ):
              "time-at-completed",
              "PageSize",
              "job-printer-uri",
-             "job-printer-up-time"
+             "job-printer-up-time",
+             "document-format",
+             "document-format-detected",
+             "document-format-supplied"
             ]
 
         # Get a job
