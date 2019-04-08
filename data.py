@@ -167,11 +167,25 @@ def getPrinterList():
 
     printerlist = []
     for k, v in printers.items():
-        v['printer-id'] = k
+        printer = getPrinterAttrs( k )
 
-        printerlist.append(v)
+        printerlist.append( printer )
 
     return printerlist
+
+def getPrinterAttrs( name ):
+
+    try:
+        conn = cups.Connection()
+        printerAttrs = conn.getPrinterAttributes( name )
+    except RuntimeError as e:
+        raise Exception( 'Error: ' + e.message )
+        return
+    except cups.IPPError as ( status, description ):
+        raise Exception( 'Error: ' + description )
+        return
+
+    return printerAttrs
 
 def releaseJob( job_id ):
 
