@@ -53,7 +53,8 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
              "time-at-creation",
              "job-media-sheets-completed",
              "time-at-completed",
-             "Duplex"
+             "Duplex",
+             "copies"
             ]
 
         # Get all jobs
@@ -80,8 +81,14 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
             # Get a copy of the actual document being printed
             document = conn.getDocument( v['job-printer-uri'], v['job-id'], 1 )
 
+            # How many copies?
+            copies = v.get( 'copies', 1 )
+
             # Get a documents page count
-            v['page-count'] = getPageCount( document['file'], v['job-id'] )
+            pages = getPageCount( document['file'], v['job-id'] )
+
+            # copies * page-count
+            v['page-count'] = copies * pages
 
             # Cleanup the temp document file
             os.remove( document['file'] )
@@ -126,7 +133,8 @@ def getPrintJob( job_id ):
              "job-printer-up-time",
              "document-format",
              "document-format-detected",
-             "document-format-supplied"
+             "document-format-supplied",
+             "copies"
             ]
 
         # Get a job
