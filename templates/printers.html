@@ -8,7 +8,7 @@
     <tr>
       <td style="width: 50%">
         <table class="table table-sm">
-          <tr><td class="text-right border-top-0" style="width: 12em"><strong>Printer:</strong></td><td class="align-middle border-top-0">{{ printer['printer-name'] }}</td></tr>
+          <tr><td class="text-right border-top-0" style="width: 11em"><strong>Printer:</strong></td><td class="align-middle border-top-0">{{ printer['printer-name'] }}</td></tr>
           <tr><td class="text-right border-top-0"><strong>Location:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-location', '') }}</td></tr>
           <tr><td class="text-right border-top-0"><strong>Info:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-info', '') }}</td></tr>
           <tr><td class="text-right border-top-0"><strong>Model:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-make-and-model', 'Unknown') | truncate(40, True) }}</td></tr>
