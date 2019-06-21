@@ -7,11 +7,13 @@ from cache import cache
 import os
 import config
 import getpass
+from db import initDB
 
 app = Flask(__name__)
 tempfolder = '/tmp/webprint_' + getpass.getuser()
 cache.init_app(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': tempfolder})
 app.secret_key=config.SECRET_KEY
+initDB()
 
 def is_number( s ):
     try:

@@ -11,6 +11,7 @@
     <tr><td class="text-right"><strong>Job state reasons:</strong></td><td>{{ job.get('job-state-reasons', '') }}</td></tr>
     <tr><td class="text-right"><strong>Pages:</strong></td><td>{{ job.get('page-count', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Copies:</strong></td><td>{{ job.get('copies', 1) }}</td></tr>
+    <tr><td class="text-right"><strong>Printed pages:</strong></td><td>{{ job.get('printed-pages', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Sheets completed:</strong></td><td>{{ job.get('job-media-sheets-completed', 0) }}</td></tr>
     <tr><td class="text-right"><strong>Duplex:</strong></td><td>{{ job.get('Duplex', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Format:</strong></td><td>{{ job.get('document-format', 'Unknown') }}</td></tr>

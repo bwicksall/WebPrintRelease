@@ -40,7 +40,7 @@
       <td class="align-middle">{{ job.get('job-name', '') | truncate(25, True) }}</td>
       <td class="align-middle">{{ job.get('job-printer-uri', '') | queuefromuri | truncate(20, True) }}</td>
       <td class="align-middle">{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td>
-      <td class="align-middle">{{ job.get('page-count', 0) }}</td>
+      <td class="align-middle">{{ (job.get('page-count', 0) * job.get('copies', 1)) }}</td>
       <td class="align-middle">{{ job.get('time-at-creation', 'None') | datetimefilter }}</td>
       <td class="align-middle">{{ job.get('job-state', 0) | jobstate }}</td>
       <td>
