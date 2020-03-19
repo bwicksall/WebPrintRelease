@@ -53,6 +53,7 @@
       <th>{{ sort_link('job-originating-user-name', 'User', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('job-name', 'Document', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('job-printer-uri', 'Printer', sort, sort_order_next, filters, daterange) }}</th>
+      <th>{{ sort_link('job-printer-location', 'Location', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('job-k-octets', 'Size', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('printed-pages', 'Pages', sort, sort_order_next, filters, daterange) }}</th>
       <th>{{ sort_link('time-at-completed', 'Time completed', sort, sort_order_next, filters, daterange) }}</th>
@@ -64,6 +65,7 @@
       <td class="align-middle">{{ job.get('job-originating-user-name', '') | truncate(12) }}</td>
       <td class="align-middle">{{ job.get('job-name', '') | truncate(25, True) }}</td>
       <td class="align-middle">{{ job.get('job-printer-uri', '') | queuefromuri | truncate(20, True) }}</td>
+      <td class="align-middle">{{ job.get('job-printer-location', '') | truncate(20, True) }}</td>
       <td class="align-middle">{{ (job['job-k-octets']*1024) | filesizeformat }}</td>
       <td class="align-middle">{{ job.get('printed-pages', 0) }}</td>
       <td class="align-middle">{{ job.get('time-at-completed', 'None') | datetimefilter }}</td>
