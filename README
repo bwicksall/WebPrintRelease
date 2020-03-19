@@ -144,3 +144,10 @@ A partially updated fork of pkpgcounter was used as a source:
 
 Additionally the PyPDF2 library was used as an laternative for counting pages in PDF files.  
 The code works but is currently unused.
+
+Notes about using Locations
+-------------------------
+
+To automatically set the printer location use the following format:
+
+   http://192.168.0.97:8080/?loc=Living%20Room

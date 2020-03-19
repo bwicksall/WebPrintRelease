@@ -5,7 +5,7 @@ import os
 import config
 import PyPDF2
 from cache import cache
-from db import getDbPageCount, putDbPageCount
+from db import getDbPageCount, putDbPageCount, getDbJobLocation, putDbJobLocation
 import sys
 sys.path.insert(0,"./PageCounter")
 from PageCounter import detectPageCount
@@ -36,10 +36,10 @@ def getPageCount( file, job_id ):
     cached = cache.get( str( job_id ) )
     if cached:
         return int( cached )
-    
+
     # Not in cache so check DB
     dbCount = getDbPageCount( job_id )
-    
+
     if dbCount:
         # Found in the DB
         result = dbCount
@@ -56,6 +56,27 @@ def getPageCount( file, job_id ):
     # Set the cache and return the result.  1 Hour timeout
     cache.set( str( job_id ), result, timeout=3600 )
     return int( result )
+
+def getJobLocation( job_id, job_printer_uri ):
+    """Get the printer location for a job"""
+
+    # Check DB for location
+    dbLocation = getDbJobLocation( job_id )
+
+    if dbLocation:
+        # Found in the DB
+        result = dbLocation
+    else:
+        offset = job_printer_uri.rfind( '/' )
+        printerName = job_printer_uri[offset + 1:]
+
+        PrinterAttrs = getPrinterAttrs( printerName )
+        Location = PrinterAttrs.get('printer-location', 'Unknown')
+        putDbJobLocation( job_id, Location )
+
+        result = Location
+
+    return result
 
 def calcPrintedPages( page_count, copies, sheets_completed, job_state ):
 
@@ -82,7 +103,7 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
         except:
             # use a safe default
             result_limit = 100
-        
+
     try:
         conn = cups.Connection()
 
@@ -134,6 +155,8 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
             v['page-count'] = getPageCount( None, v['job-id'] )
 
         v['printed-pages'] = calcPrintedPages( v.get('page-count', 0), v.get('copies', 1), v.get('job-media-sheets-completed', 0), v.get('job-state', 0) )
+
+        v['job-printer-location'] = getJobLocation( v['job-id'], v.get('job-printer-uri', 'Unknown'))
 
         joblist.append(v)
 
@@ -202,6 +225,8 @@ def getPrintJob( job_id ):
         os.remove( document['file'] )
 
     job['printed-pages'] = calcPrintedPages( job.get('page-count', 0), job.get('copies', 1), job.get('job-media-sheets-completed', 0), job.get('job-state', 0) )
+    
+    job['job-printer-location'] = getJobLocation( job_id, job.get('job-printer-uri', 'Unknown'))
 
     return job
 
@@ -224,6 +249,29 @@ def getPrinterList():
         printerlist.append( printer )
 
     return printerlist
+
+def getLocations():
+
+    try:
+        conn = cups.Connection()
+        printers = conn.getPrinters()
+    except RuntimeError as e:
+        raise Exception( 'Error: ' + e.message )
+        return
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
+        return
+
+    locations = []
+    for k, v in printers.items():
+        printer = getPrinterAttrs( k )
+
+        locations.append( printer.get('printer-location', 'Unknown') )
+
+    locations = list(set(locations)) 
+    locations.sort()
+
+    return locations
 
 def getPrinterAttrs( name ):
 

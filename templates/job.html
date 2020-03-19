@@ -29,6 +29,7 @@
     <tr><td class="text-right"><strong>Page size:</strong></td><td>{{ job.get('PageSize', 'Unknown') }}</td></tr>
     <tr><td class="text-right"><strong>Printer:</strong></td><td>{{ job.get('job-printer-uri', '') }}</td></tr>
     <tr><td class="text-right"><strong>Printer uptime:</strong></td><td>{{ job.get('job-printer-up-time', 0) | datetimefilter }}</td></tr>
+    <tr><td class="text-right"><strong>Printer location:</strong></td><td>{{ job.get('job-printer-location', '') }}</td></tr>
    </table>
    <a class="btn btn-success float-right" href="/jobs">Return to Jobs List</a>
  {% endif %}

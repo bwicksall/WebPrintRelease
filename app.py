@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, send_from_directory
-from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterList
+from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterList, getLocations
 #from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
 from datetime import datetime, timedelta, date, timezone
@@ -86,11 +86,28 @@ def favicon():
 
 @app.route( '/' )
 def index():
-    return render_template( 'home.html' )
+    try:
+        Locations = getLocations()
+    except Exception as e:
+        return render_template( 'home.html', error = e.message )
+
+    Location = request.args.get('loc')
+
+    if Location and (Location in Locations):
+        session['location'] = request.args.get('loc')
+    elif Location:
+        session['location'] = 'all'
+
+    return render_template( 'home.html', locations = Locations )
 
 @app.route( '/about' )
 def about():
-    return render_template( 'about.html' )
+    try:
+        Locations = getLocations()
+    except Exception as e:
+        return render_template( 'about.html', error = e.message )
+
+    return render_template( 'about.html', locations = Locations )
 
 @app.route( '/jobs' )
 @is_logged_in
@@ -125,14 +142,22 @@ def jobs():
     # Go ahead and get the print jobs
     try:
         Jobs = getPrintJobs( 'not-completed', sort, sort_order )
+        Locations = getLocations()
     except Exception as e:
         return render_template( 'jobs.html', error = e.message )
-    
+
     if Jobs:
-        return render_template( 'jobs.html', jobs = Jobs, advanced = advanced, next_mode = next_mode, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
+        Location = session.get('location', 'all')
+
+        if Location == 'all':
+            filtered_jobs = Jobs
+        else:
+            filtered_jobs = list( filter( lambda d: d['job-printer-location'] == Location, Jobs ) )
+
+        return render_template( 'jobs.html', jobs = filtered_jobs, advanced = advanced, next_mode = next_mode, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next, locations = Locations )
     else:
         msg = 'No Print Jobs in Queue'
-        return render_template( 'jobs.html', msg = msg, advanced = advanced, next_mode = next_mode )
+        return render_template( 'jobs.html', msg = msg, advanced = advanced, next_mode = next_mode, locations = Locations )
 
 @app.route( '/jobscompleted' )
 @is_logged_in
@@ -150,12 +175,20 @@ def jobscompleted():
 
     try:
         Jobs = getPrintJobs( 'completed', sort, sort_order )
+        Locations = getLocations()
     except Exception as e:
         return render_template( 'jobscompleted.html', error = e.message )
 
     if Jobs:
         filters = request.args.get('filters', 'none')
         daterange = request.args.get('daterange')
+
+        Location = session.get('location', 'all')
+
+        if Location == 'all':
+            location_jobs = Jobs
+        else:
+            location_jobs = list( filter( lambda d: d['job-printer-location'] == Location, Jobs ) )
 
         if daterange == None:
             # No date range provided so lets build one that spans 30 days
@@ -171,16 +204,16 @@ def jobscompleted():
 
         if filters == 'none':
             # No filters so we will just limit on date range
-            filtered_jobs = list( filter( lambda d: startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate, Jobs ) )
-            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
+            filtered_jobs = list( filter( lambda d: startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate, location_jobs ) )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next, locations = Locations )
         else:
             # We have filters so filter and limit on date range
             StateList = [9] # == completed
-            filtered_jobs = list( filter( lambda d: ( d['job-state'] in StateList ) and ( startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate ), Jobs ) )
-            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next )
+            filtered_jobs = list( filter( lambda d: ( d['job-state'] in StateList ) and ( startdate < datetime.fromtimestamp( d['time-at-completed'] ) < enddate ), location_jobs ) )
+            return render_template( 'jobscompleted.html', jobs = filtered_jobs, filters = filters, daterange = daterange, sort = sort, sort_order = sort_order, sort_order_next = sort_order_next, locations = Locations )
     else:
         msg = 'No Print Jobs History'
-        return render_template( 'jobscompleted.html', msg = msg )
+        return render_template( 'jobscompleted.html', msg = msg, locations = Locations )
 
 @app.route( '/jobs/<int:id>' )
 @is_logged_in
@@ -188,10 +221,11 @@ def job( id ):
 
     try:
         Job = getPrintJob( id )
+        Locations = getLocations()
     except Exception as e:
         return render_template( 'job.html', error = e.message )
     else:
-        return render_template( 'job.html', job=Job )
+        return render_template( 'job.html', job=Job, locations=Locations )
 
 @app.route( '/release_job/<int:id>', methods=['POST'] )
 @is_logged_in
@@ -265,17 +299,33 @@ def set_advanced():
 
     return redirect( url_for( 'jobs' ) + sort_str )
 
+@app.route( '/set_location', methods=['POST', 'GET'] )
+@is_logged_in
+def set_location():
+
+    session['location'] = request.args.get('loc')
+
+    return redirect( '/' )
+
 @app.route( '/printers' )
 @is_logged_in
 def printers():
-    
+
     try:
         Printers = getPrinterList()
+        Locations = getLocations()
     except Exception as e:
         return render_template( 'printers.html', error = e.message )
-    
+
     if Printers:
-        return render_template( 'printers.html', printers = Printers )
+        Location = session.get('location', 'all')
+
+        if Location == 'all':
+            filtered_printers = Printers
+        else:
+            filtered_printers = list( filter( lambda d: d['printer-location'] == Location, Printers ) )
+
+        return render_template( 'printers.html', printers = filtered_printers, locations = Locations )
     else:
         msg = 'No Prints Configured'
         return render_template( 'printers.html', msg = msg )
