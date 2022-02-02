@@ -3,11 +3,27 @@ import json
 import subprocess
 import os
 import config
+import PyPDF2
 from cache import cache
 from db import getDbPageCount, putDbPageCount
 
-def getPageCount( file, job_id ):
+def detectPageCount( file ):
     """Count the pages in a file"""
+
+    # Assuming PDF for now
+
+    # creating a pdf file object
+    pdfFileObj = open( file , 'rb' )
+
+    # creating a pdf reader object
+    pdfReader = PyPDF2.PdfFileReader( pdfFileObj )
+
+    # Get page count
+    result = pdfReader.numPages
+    return result
+
+def getPageCount( file, job_id ):
+    """Get either stored or newly detected page count"""
     
     # Use str(job_id) as the key cause file changes every time
     cached = cache.get( str( job_id ) )
@@ -21,17 +37,11 @@ def getPageCount( file, job_id ):
         # Found in the DB
         result = dbCount
     elif file:
-        # Try pkpgcounter to get page count
-        args = ( "pkpgcounter", file )
+        # See if we can detect page count
+        result = detectPageCount( file )
 
-        try:
-            popen = subprocess.Popen( args, stdout=subprocess.PIPE )
-            popen.wait()
-            pageCount = popen.stdout.read()
-            result = pageCount.strip()
+        if result != '0':
             putDbPageCount( job_id, result )
-        except:
-            result = '0'
     else:
         # Can't find page count anywhere
         result = '0'
@@ -92,8 +102,8 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     # Merge job-id into the dictionary and create a new list of dicts
@@ -167,8 +177,8 @@ def getPrintJob( job_id ):
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     try:
@@ -196,8 +206,8 @@ def getPrinterList():
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     printerlist = []
@@ -216,8 +226,8 @@ def getPrinterAttrs( name ):
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     return printerAttrs
@@ -231,8 +241,8 @@ def releaseJob( job_id ):
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     return
@@ -246,8 +256,8 @@ def cancelJob( job_id ):
     except RuntimeError as e:
         raise Exception( 'Error: ' + e.message )
         return
-    except cups.IPPError as ( status, description ):
-        raise Exception( 'Error: ' + description )
+    except cups.IPPError as e:
+        raise Exception( 'Error: ' + e.description )
         return
 
     return

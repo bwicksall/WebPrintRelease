@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, url_for, session, req
 from data import getPrintJobs, getPrintJob, releaseJob, cancelJob, getPrinterList
 #from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from cache import cache
 import os
 import config
@@ -98,7 +98,7 @@ def jobs():
 
     # Get advanced session values
     advanced = session.get( 'advanced', 0 )
-    advanced_start = session.get( 'advanced_start', datetime.now() )
+    advanced_start = session.get( 'advanced_start', datetime.now(timezone.utc) )
 
     # Keep track of sort order
     sort = request.args.get('sort', 'job-originating-user-name')
@@ -111,7 +111,7 @@ def jobs():
         sort_order_next = 'asc'
 
     # Check how long you have been in advanced mode.  Toggle off if greater than 5 minutes.
-    time_now = datetime.now()
+    time_now = datetime.now(timezone.utc)
     if time_now - advanced_start > timedelta( minutes=5 ):
         advanced = 0
         session['advanced'] = 0
@@ -259,7 +259,7 @@ def set_advanced():
     # Are we toggling on or off?
     if advanced == 0:
         session['advanced'] = 1
-        session['advanced_start'] = datetime.now()
+        session['advanced_start'] = datetime.now(timezone.utc)
     else:
         session['advanced'] = 0
 
