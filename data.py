@@ -12,14 +12,18 @@ def detectPageCount( file ):
 
     # Assuming PDF for now
 
-    # creating a pdf file object
-    pdfFileObj = open( file , 'rb' )
+    try:
+        # creating a pdf file object
+        pdfFileObj = open( file , 'rb' )
 
-    # creating a pdf reader object
-    pdfReader = PyPDF2.PdfFileReader( pdfFileObj )
+        # creating a pdf reader object
+        pdfReader = PyPDF2.PdfFileReader( pdfFileObj )
 
-    # Get page count
-    result = pdfReader.numPages
+        # Get page count
+        result = pdfReader.numPages
+    except:
+        result ='0'
+
     return result
 
 def getPageCount( file, job_id ):
