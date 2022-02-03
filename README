@@ -2,22 +2,29 @@ Web Print Release
 
 Web based print release for CUPS.
 
+Author: bwicksall@owwl.org
+
 Bits needed for Python
 ----------------------
 
 Install the following:
 
-   apt-get install python-pip python-cups pkpgcounter
+   apt-get install python3-pip python3-cups git-core
 
 As the user that will be running the app install required libraries:
 
-   pip install flask
-   pip install Flask-Caching
-   pip install gunicorn
+   pip3 install flask
+   pip3 install Flask-Caching
+   pip3 install gunicorn
+   pip3 install PyPDF2
+
+Copy config.py.example to config.py
+
+   cp config.py.example config.py
 
 Run the app in development mode with the following command line:
 
-   python app.py
+   python3 app.py
 
 Run the app with gunicorn for production:
 
@@ -118,3 +125,22 @@ JS Bits Used
 ------------
 
 Date Picker: http://www.daterangepicker.com/
+
+Page Counting
+-------------
+
+In the past we used pkpgcounter to count pages.  Unfortunately this application appears
+largly abandoned and has not been fully upgraded to Python 3.  It is also not available 
+in Debian 10+.  
+
+To work around this I have pulled portions of code from pkpgcounter that I need to count
+pages in the formats that are common in my environment.
+
+   PDF, PCL, PostScript
+
+A partially updated fork of pkpgcounter was used as a source:
+
+   https://github.com/berghetti/pkpgcounter-1
+
+Additionally the PyPDF2 library was used as an laternative for counting pages in PDF files.  
+The code works but is currently unused.

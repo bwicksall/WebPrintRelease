@@ -6,8 +6,11 @@ import config
 import PyPDF2
 from cache import cache
 from db import getDbPageCount, putDbPageCount
+import sys
+sys.path.insert(0,"./PageCounter")
+from PageCounter import detectPageCount
 
-def detectPageCount( file ):
+def detectPageCountInternal( file ):
     """Count the pages in a file"""
 
     # Assuming PDF for now
