@@ -1,17 +1,30 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <h1>Login</h1>
   
-  <form action="" method="POST">
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" name="username" class="form-control" autofocus="autofocus" value={{request.form.username}}>
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="card shadow-2-strong" style="border-radius: 1rem;">
+        <div class="card-body p-5 text-center">
+
+          <h1>Sign in</h1>
+
+          <form action="" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="typeUsernameX-2">Username</label>
+              <input type="text" name="username" id="typeUsernameX-2" class="form-control form-control-lg" autofocus="autofocus" value={{request.form.username}}>
+            </div>
+            <div class="form-outline mb-4">
+              <label class="form-label" for="typePasswordX-2">Password</label>
+              <input type="password" name="password" id="typePasswordX-2" class="form-control form-control-lg" value={{request.form.password}}>
+            </div>
+            <button type="submit" class="btn btn-primary">LOGIN</button>
+          </form>
+
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" name="password" class="form-control" value={{request.form.password}}>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  </div>
+</div>
 {% endblock %}
