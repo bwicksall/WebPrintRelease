@@ -89,7 +89,7 @@ def index():
     try:
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'home.html', error = e.message )
+        return render_template( 'home.html', error = repr(e) )
 
     Location = request.args.get('loc')
 
@@ -105,7 +105,7 @@ def about():
     try:
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'about.html', error = e.message )
+        return render_template( 'about.html', error = repr(e) )
 
     return render_template( 'about.html', locations = Locations )
 
@@ -144,7 +144,7 @@ def jobs():
         Jobs = getPrintJobs( 'not-completed', sort, sort_order )
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'jobs.html', error = e.message )
+        return render_template( 'jobs.html', error = repr(e) )
 
     if Jobs:
         Location = session.get('location', 'all')
@@ -177,7 +177,7 @@ def jobscompleted():
         Jobs = getPrintJobs( 'completed', sort, sort_order )
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'jobscompleted.html', error = e.message )
+        return render_template( 'jobscompleted.html', error = repr(e) )
 
     if Jobs:
         filters = request.args.get('filters', 'none')
@@ -223,7 +223,7 @@ def job( id ):
         Job = getPrintJob( id )
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'job.html', error = e.message )
+        return render_template( 'job.html', error = repr(e) )
     else:
         return render_template( 'job.html', job=Job, locations=Locations )
 
@@ -234,7 +234,7 @@ def release_job( id ):
     try:
         releaseJob( id )
     except Exception as e:
-        flash( e.message, 'danger' )
+        flash( repr(e), 'danger' )
     else:
         flash( 'Job ' + str(id) + ' Released', 'success' )
 
@@ -257,7 +257,7 @@ def cancel_job( id ):
     try:
         cancelJob( id )
     except Exception as e:
-        flash( e.message, 'danger' )
+        flash( repr(e), 'danger' )
     else:
         flash( 'Job ' + str(id) + ' Cancelled', 'success' )
 
@@ -315,7 +315,7 @@ def printers():
         Printers = getPrinterList()
         Locations = getLocations()
     except Exception as e:
-        return render_template( 'printers.html', error = e.message )
+        return render_template( 'printers.html', error = repr(e) )
 
     if Printers:
         Location = session.get('location', 'all')
