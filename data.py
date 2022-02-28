@@ -128,7 +128,7 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
                              first_job_id=-1,
                              requested_attributes=r )
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -205,7 +205,7 @@ def getPrintJob( job_id ):
         # Get a job
         job = conn.getJobAttributes( job_id=job_id, requested_attributes=r )
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -236,7 +236,7 @@ def getPrinterList():
         conn = cups.Connection()
         printers = conn.getPrinters()
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -256,7 +256,7 @@ def getLocations():
         conn = cups.Connection()
         printers = conn.getPrinters()
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -279,7 +279,7 @@ def getPrinterAttrs( name ):
         conn = cups.Connection()
         printerAttrs = conn.getPrinterAttributes( name )
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -294,7 +294,7 @@ def releaseJob( job_id ):
         # Release the job
         jobs = conn.setJobHoldUntil( job_id, 'no-hold' )
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
@@ -309,7 +309,7 @@ def cancelJob( job_id ):
         # Cancel the job.  False just cancels.  True cancels and purges the job from history.
         jobs = conn.cancelJob( job_id, False )
     except RuntimeError as e:
-        raise Exception( 'Error: ' + e.message )
+        raise Exception( 'Error: ' + repr(e) )
         return
     except cups.IPPError as e:
         raise Exception( 'Error: ' + e.description )
