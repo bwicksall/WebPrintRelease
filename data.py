@@ -4,7 +4,6 @@ import subprocess
 import os
 import config
 import PyPDF2
-from cache import cache
 from db import getDbPageCount, putDbPageCount, getDbJobLocation, putDbJobLocation
 import sys
 sys.path.insert(0,"./PageCounter")
@@ -31,13 +30,8 @@ def detectPageCountInternal( file ):
 
 def getPageCount( file, job_id ):
     """Get either stored or newly detected page count"""
-    
-    # Use str(job_id) as the key cause file changes every time
-    cached = cache.get( str( job_id ) )
-    if cached:
-        return int( cached )
 
-    # Not in cache so check DB
+    # Check DB
     dbCount = getDbPageCount( job_id )
 
     if dbCount:
@@ -52,9 +46,7 @@ def getPageCount( file, job_id ):
     else:
         # Can't find page count anywhere
         result = '0'
-    
-    # Set the cache and return the result.  1 Hour timeout
-    cache.set( str( job_id ), result, timeout=3600 )
+
     return int( result )
 
 def getJobLocation( job_id, job_printer_uri ):
@@ -151,7 +143,7 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
             # Cleanup the temp document file
             os.remove( document['file'] )
         else:
-            # No file so try cache or db for page count
+            # No file so try db for page count
             v['page-count'] = getPageCount( None, v['job-id'] )
 
         v['printed-pages'] = calcPrintedPages( v.get('page-count', 0), v.get('copies', 1), v.get('job-media-sheets-completed', 0), v.get('job-state', 0) )
@@ -215,7 +207,7 @@ def getPrintJob( job_id ):
         # Get a copy of the actual document being printed
         document = conn.getDocument( job['job-printer-uri'], job['job-id'], 1 )
     except:
-        # No file so check cache or database for page count
+        # No file so check database for page count
         job['page-count'] = getPageCount( None, job['job-id'] )
     else:
         # Get a documents page count
