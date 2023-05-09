@@ -38,8 +38,12 @@ def getPageCount( file, job_id ):
         # Found in the DB
         result = dbCount
     elif file:
-        # See if we can detect page count
-        result = detectPageCount( file )
+        # See if we can detect page count internally
+        result = detectPageCountInternal( file )
+
+        if not result:
+            # Try with PageCounter
+            result = detectPageCount( file )
 
         if result != '0':
             putDbPageCount( job_id, result )
