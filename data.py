@@ -3,7 +3,7 @@ import json
 import subprocess
 import os
 import config
-import PyPDF2
+from pypdf import PdfReader
 from db import getDbPageCount, putDbPageCount, getDbJobLocation, putDbJobLocation
 import sys
 sys.path.insert(0,"./PageCounter")
@@ -19,10 +19,10 @@ def detectPageCountInternal( file ):
         pdfFileObj = open( file , 'rb' )
 
         # creating a pdf reader object
-        pdfReader = PyPDF2.PdfFileReader( pdfFileObj )
+        Reader = PdfReader( pdfFileObj )
 
         # Get page count
-        result = pdfReader.numPages
+        result = len( Reader.pages )
     except:
         result ='0'
 
