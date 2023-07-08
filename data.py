@@ -41,7 +41,7 @@ def getPageCount( file, job_id ):
         # See if we can detect page count internally
         result = detectPageCountInternal( file )
 
-        if not result:
+        if result == '0':
             # Try with PageCounter
             result = detectPageCount( file )
 
