@@ -138,14 +138,21 @@ def getPrintJobs( which_jobs_in='not-completed', sort='job-originating-user-name
 
         # Document not available for completed jobs
         if which_jobs_in=='not-completed':
-            # Get a copy of the actual document being printed
-            document = conn.getDocument( v['job-printer-uri'], v['job-id'], 1 )
+            # Check DB
+            dbCount = getPageCount( None, v['job-id'] )
 
-            # Get a documents page count
-            v['page-count'] = getPageCount( document['file'], v['job-id'] )
+            if dbCount:
+                # Found in the DB
+                v['page-count'] = dbCount
+            else:
+                # Get a copy of the actual document being printed
+                document = conn.getDocument( v['job-printer-uri'], v['job-id'], 1 )
 
-            # Cleanup the temp document file
-            os.remove( document['file'] )
+                # Get a documents page count
+                v['page-count'] = getPageCount( document['file'], v['job-id'] )
+
+                # Cleanup the temp document file
+                os.remove( document['file'] )
         else:
             # No file so try db for page count
             v['page-count'] = getPageCount( None, v['job-id'] )
