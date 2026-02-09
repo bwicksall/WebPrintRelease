@@ -30,7 +30,7 @@ class Parser(pdlparser.PDLParser):
     """A parser for PostScript documents."""
     totiffcommands = [ 'gs -sDEVICE=tiff24nc -dPARANOIDSAFER -dNOPAUSE -dBATCH -dQUIET -r"%(dpi)i" -sOutputFile="%(outfname)s" "%(infname)s"' ]
     required = [ "gs" ]
-    openmode = "rU"
+    openmode = "r"
     format = "PostScript"
     def isValid(self):
         """Returns True if data is PostScript, else False."""

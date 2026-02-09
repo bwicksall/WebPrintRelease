@@ -218,7 +218,7 @@ class Parser(pdlparser.PDLParser):
         datatype = self.minfile[pos]
         pos += 1
         length = self.tags[datatype]
-        if isinstance(length, collections.Callable):
+        if isinstance(length, collections.abc.Callable):
             length = length(pos)
         try:
             return 1 + length + size * unpack(self.unpackType[length], self.minfile[pos:pos+length])[0]
@@ -328,7 +328,7 @@ class Parser(pdlparser.PDLParser):
                 pos -= offset
                 #self.logdebug("x46 new position 0x%08x" % pos)
                 length = self.tags[self.minfile[pos]]
-                if isinstance(length, collections.Callable):
+                if isinstance(length, collections.abc.Callable):
                     length = length(pos+1)
                 #self.logdebug("x46 length %i" % length)
                 if funcid == 0x92: # we want to skip these blocks
@@ -623,7 +623,7 @@ class Parser(pdlparser.PDLParser):
                     pos += 1
                     length = tags[tag]
                     if length:
-                        if isinstance(length, collections.Callable):
+                        if isinstance(length, collections.abc.Callable):
                             length = length(pos)
                         oldpos = pos
                         pos += length
