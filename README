@@ -60,18 +60,18 @@ Reload services, enable and start WebPrintRelease:
    systemctl enable WebPrintRelease
    systemctl start WebPrintRelease
 
-Note: If the main page is slower that expected delete /tmp/webprint and restart service.
+Note: If the main page is slower than expected delete /tmp/webprint and restart service.
 The folder may have been created by a different user and ownership is wrong.
 
 Configure CUPS
 --------------
 
-Cups needs some configuration to work as a print release system.  We will setup the default 
+Cups needs some configuration to work as a print release system.  We will set up the default 
 state of new jobs to "Held", change the default visibility of job names and modify default 
 cups permissions to limit who can release jobs. We will also tweak PolicyKit to allow the 
 print release user to release jobs.
 
-First lets force new print jobs into a held state. This needs to be done for each printer 
+First let's force new print jobs into a held state. This needs to be done for each printer 
 on the server:
 
    lpadmin -p HP-LaserJet-400-M401 -o job-hold-until-default=indefinite
@@ -130,7 +130,7 @@ Page Counting
 -------------
 
 In the past we used pkpgcounter to count pages.  Unfortunately this application appears
-largly abandoned and has not been fully upgraded to Python 3.  It is also not available 
+largely abandoned and has not been fully upgraded to Python 3.  It is also not available 
 in Debian 10+.  
 
 To work around this I have pulled portions of code from pkpgcounter that I need to count
@@ -142,7 +142,7 @@ A partially updated fork of pkpgcounter was used as a source:
 
    https://github.com/berghetti/pkpgcounter-1
 
-Additionally the PyPDF2 library was used as an laternative for counting pages in PDF files.  
+Additionally the PyPDF2 library was used as an alternative for counting pages in PDF files.  
 The code works but is currently unused.
 
 Notes about using Locations
