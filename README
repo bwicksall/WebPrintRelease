@@ -1,7 +1,10 @@
 Web Print Release
 
-Web based print release for CUPS.  So far WebPrintRelease has only been used on Debian in a LTSP 
-environment.  These instructions are for Debian 12 Bookworm.  
+Web based print release for CUPS.  So far WebPrintRelease has only been used on Debian.  These 
+instructions are for Debian 12 Bookworm.  When combined with LTSP this allows clients to print
+to a held queue.  Print jobs are released or cancelled by library staff through the web interface.
+
+Windows clients can also be used.  
 
 Author: bwicksall@owwl.org
 
