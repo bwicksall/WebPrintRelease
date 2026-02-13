@@ -1,0 +1,20 @@
+.navbar .dropdown-menu {
+  min-width: 14rem;
+}
+
+.table td form {
+  margin-bottom: 0;
+}
+
+.table td .btn {
+  white-space: nowrap;
+}
+
+.jobs-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.job-history-daterange {
+  min-width: 16rem;
+}

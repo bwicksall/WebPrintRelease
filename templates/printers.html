@@ -8,22 +8,22 @@
     <tr>
       <td style="width: 50%">
         <table class="table table-sm">
-          <tr><td class="text-right border-top-0" style="width: 11em"><strong>Printer:</strong></td><td class="align-middle border-top-0">{{ printer['printer-name'] }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Location:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-location', '') }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Info:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-info', '') }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Model:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-make-and-model', 'Unknown') | truncate(40, True) }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Type:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-type', 0) }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Default Color Mode:</strong></td><td class="align-middle border-top-0">{{ printer.get('print-color-mode-default', '') }}</td></tr>
+          <tr><td class="text-end border-top-0" style="width: 11em"><strong>Printer:</strong></td><td class="align-middle border-top-0">{{ printer['printer-name'] }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Location:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-location', '') }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Info:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-info', '') }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Model:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-make-and-model', 'Unknown') | truncate(40, True) }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Type:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-type', 0) }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Default Color Mode:</strong></td><td class="align-middle border-top-0">{{ printer.get('print-color-mode-default', '') }}</td></tr>
         </table>
       </td>
       <td>
         <table class="table table-sm">
-          <tr><td class="text-right border-top-0" style="width: 11em"><strong>Shared:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-is-shared', 'Unknown') }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>State:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state', 0) | printerstate }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>State Message:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state-message', '') }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>URI Supported:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-uri-supported', '')[0] }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Device URI:</strong></td><td class="align-middle border-top-0">{{ printer.get('device-uri', '') }}</td></tr>
-          <tr><td class="text-right border-top-0"><strong>Queued Job Count:</strong></td><td class="align-middle border-top-0">{{ printer.get('queued-job-count', 0) }}</td></tr>
+          <tr><td class="text-end border-top-0" style="width: 11em"><strong>Shared:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-is-shared', 'Unknown') }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>State:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state', 0) | printerstate }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>State Message:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-state-message', '') }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>URI Supported:</strong></td><td class="align-middle border-top-0">{{ printer.get('printer-uri-supported', '')[0] }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Device URI:</strong></td><td class="align-middle border-top-0">{{ printer.get('device-uri', '') }}</td></tr>
+          <tr><td class="text-end border-top-0"><strong>Queued Job Count:</strong></td><td class="align-middle border-top-0">{{ printer.get('queued-job-count', 0) }}</td></tr>
         </table>
       </td>
     </tr>

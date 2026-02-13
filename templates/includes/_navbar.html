@@ -1,19 +1,19 @@
 {% macro nav_link(endpoint, name) %}
 {% if request.endpoint.endswith(endpoint) %}
-  <li class="nav-item active"><a class="nav-link" href="{{ url_for(endpoint) }}">{{name}}</a></li>
+  <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for(endpoint) }}">{{name}}</a></li>
 {% else %}
   <li class="nav-item"><a class="nav-link" href="{{ url_for(endpoint) }}">{{name}}</a></li>
 {% endif %}
 {% endmacro %}
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="/"><i class="fa fa-print"></i> Web Print Release</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="/"><i class="fa fa-print ps-3"></i> Web Print Release</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
 
           {% if session.logged_in %}
             {{ nav_link('jobs', 'Active Jobs') }}
@@ -23,17 +23,17 @@
           {{ nav_link('about', 'About') }}
         </ul>
 
-        <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav ms-md-auto mb-2 mb-md-0">
           {% if session.logged_in %}
             <li class="nav-item dropdown">
-              <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle me-md-2" href="#" id="bd-versions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {% if session.location and (session.location != 'all') %}
                   {{ session.location }}
                 {% else %}
                   All Locations
                 {% endif %}
               </a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-versions">
                 <a class="dropdown-item" href="/set_location?loc=all">All Locations</a>
                 <div class="dropdown-divider"></div>
                 {% for location in locations %}

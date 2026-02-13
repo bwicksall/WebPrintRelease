@@ -14,11 +14,12 @@
 {% endmacro %}
 
 {% block body %}
-  <h2>Active Print Jobs <a id="countdown" class="btn btn-success float-right" href="{{ request.url }}"></a></h2>
+  <h2>Active Print Jobs <a id="countdown" class="btn btn-success float-end" href="{{ request.url }}"></a></h2>
 
   <br>
 
-  <table id="jobs" class="table table-striped">
+  <div class="table-responsive">
+  <table id="jobs" class="table table-striped table-hover align-middle">
     <thead>
     <tr>
       <th class="text-center">Job</th>
@@ -64,8 +65,9 @@
     {% endfor %}
     </tbody>
   </table>
+  </div>
   <br>
-  <div class="float-right">
+  <div class="jobs-actions">
   <form action="{{ url_for( 'set_advanced' ) }}" method="post">
       <input type="hidden" name="_method" value="SETADVANCED">
       <input type="hidden" name="sort" value="{{ sort }}">
@@ -78,7 +80,7 @@
   
   <script>
   (function countdown(remaining) {
-      document.getElementById('countdown').innerHTML = '<i class="fa fa-refresh mr-1"></i> Refresh list in ' + remaining + ' seconds';
+      document.getElementById('countdown').innerHTML = '<i class="fa fa-refresh me-1"></i> Refresh list in ' + remaining + ' seconds';
       
       if(remaining <= 0) {
           location.reload(true);

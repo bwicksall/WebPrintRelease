@@ -2,36 +2,36 @@
  
  {% block body %}
  {% if job %}
-   <h2>Job {{ job.get('job-id', 'Unknown') }}<a class="btn btn-success float-right" href="/jobs">Return to Jobs List</a></h2>
+   <h2>Job {{ job.get('job-id', 'Unknown') }}<a class="btn btn-success float-end" href="/jobs">Return to Jobs List</a></h2>
    <table class="table table-striped table-sm">
-    <tr><td class="text-right"><strong>Job name:</strong></td><td>{{ job.get('job-name', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>User:</strong></td><td>{{ job.get('job-originating-user-name', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Hostname:</strong></td><td>{{ job.get('job-originating-host-name', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Job state:</strong></td><td>{{ job.get('job-state', 0) | jobstate }}</td></tr>
-    <tr><td class="text-right"><strong>Job state reasons:</strong></td><td>{{ job.get('job-state-reasons', '') }}</td></tr>
-    <tr><td class="text-right"><strong>Pages:</strong></td><td>{{ job.get('page-count', 0) }}</td></tr>
-    <tr><td class="text-right"><strong>Copies:</strong></td><td>{{ job.get('copies', 1) }}</td></tr>
-    <tr><td class="text-right"><strong>Printed pages:</strong></td><td>{{ job.get('printed-pages', 0) }}</td></tr>
-    <tr><td class="text-right"><strong>Sheets completed:</strong></td><td>{{ job.get('job-media-sheets-completed', 0) }}</td></tr>
-    <tr><td class="text-right"><strong>Duplex:</strong></td><td>{{ job.get('Duplex', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Format:</strong></td><td>{{ job.get('document-format', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Format Detected:</strong></td><td>{{ job.get('document-format-detected', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Format Supplied:</strong></td><td>{{ job.get('document-format-supplied', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Number of documents:</strong></td><td>{{ job.get('number-of-documents', 0) }}</td></tr>
-    <tr><td class="text-right"><strong>Job size:</strong></td><td>{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td></tr>    
-    <tr><td class="text-right"><strong>Job size processed:</strong></td><td>{{ (job.get('job-k-octets-processed',0)*1024) | filesizeformat }}</td></tr>
-    <tr><td class="text-right"><strong>Job URI:</strong></td><td>{{job.get('job-uri', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Job hold until:</strong></td><td>{{ job.get('job-hold-until', '') }}</td></tr>
-    <tr><td class="text-right"><strong>Job priority:</strong></td><td>{{ job.get('job-priority', 0) }}</td></tr>
-    <tr><td class="text-right"><strong>Created time:</strong></td><td>{{ job.get('time-at-creation', o) | datetimefilter }}</td></tr>
-    <tr><td class="text-right"><strong>Processing time:</strong></td><td>{{ job.get('time-at-processing', 0) | datetimefilter }}</td></tr>
-    <tr><td class="text-right"><strong>Completed time:</strong></td><td>{{ job.get('time-at-completed', 0) | datetimefilter }}</td></tr>
-    <tr><td class="text-right"><strong>Page size:</strong></td><td>{{ job.get('PageSize', 'Unknown') }}</td></tr>
-    <tr><td class="text-right"><strong>Printer:</strong></td><td>{{ job.get('job-printer-uri', '') }}</td></tr>
-    <tr><td class="text-right"><strong>Printer uptime:</strong></td><td>{{ job.get('job-printer-up-time', 0) | datetimefilter }}</td></tr>
-    <tr><td class="text-right"><strong>Printer location:</strong></td><td>{{ job.get('job-printer-location', '') }}</td></tr>
+    <tr><td class="text-end"><strong>Job name:</strong></td><td>{{ job.get('job-name', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>User:</strong></td><td>{{ job.get('job-originating-user-name', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Hostname:</strong></td><td>{{ job.get('job-originating-host-name', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Job state:</strong></td><td>{{ job.get('job-state', 0) | jobstate }}</td></tr>
+    <tr><td class="text-end"><strong>Job state reasons:</strong></td><td>{{ job.get('job-state-reasons', '') }}</td></tr>
+    <tr><td class="text-end"><strong>Pages:</strong></td><td>{{ job.get('page-count', 0) }}</td></tr>
+    <tr><td class="text-end"><strong>Copies:</strong></td><td>{{ job.get('copies', 1) }}</td></tr>
+    <tr><td class="text-end"><strong>Printed pages:</strong></td><td>{{ job.get('printed-pages', 0) }}</td></tr>
+    <tr><td class="text-end"><strong>Sheets completed:</strong></td><td>{{ job.get('job-media-sheets-completed', 0) }}</td></tr>
+    <tr><td class="text-end"><strong>Duplex:</strong></td><td>{{ job.get('Duplex', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Format:</strong></td><td>{{ job.get('document-format', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Format Detected:</strong></td><td>{{ job.get('document-format-detected', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Format Supplied:</strong></td><td>{{ job.get('document-format-supplied', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Number of documents:</strong></td><td>{{ job.get('number-of-documents', 0) }}</td></tr>
+    <tr><td class="text-end"><strong>Job size:</strong></td><td>{{ (job.get('job-k-octets', 0)*1024) | filesizeformat }}</td></tr>    
+    <tr><td class="text-end"><strong>Job size processed:</strong></td><td>{{ (job.get('job-k-octets-processed',0)*1024) | filesizeformat }}</td></tr>
+    <tr><td class="text-end"><strong>Job URI:</strong></td><td>{{job.get('job-uri', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Job hold until:</strong></td><td>{{ job.get('job-hold-until', '') }}</td></tr>
+    <tr><td class="text-end"><strong>Job priority:</strong></td><td>{{ job.get('job-priority', 0) }}</td></tr>
+    <tr><td class="text-end"><strong>Created time:</strong></td><td>{{ job.get('time-at-creation', o) | datetimefilter }}</td></tr>
+    <tr><td class="text-end"><strong>Processing time:</strong></td><td>{{ job.get('time-at-processing', 0) | datetimefilter }}</td></tr>
+    <tr><td class="text-end"><strong>Completed time:</strong></td><td>{{ job.get('time-at-completed', 0) | datetimefilter }}</td></tr>
+    <tr><td class="text-end"><strong>Page size:</strong></td><td>{{ job.get('PageSize', 'Unknown') }}</td></tr>
+    <tr><td class="text-end"><strong>Printer:</strong></td><td>{{ job.get('job-printer-uri', '') }}</td></tr>
+    <tr><td class="text-end"><strong>Printer uptime:</strong></td><td>{{ job.get('job-printer-up-time', 0) | datetimefilter }}</td></tr>
+    <tr><td class="text-end"><strong>Printer location:</strong></td><td>{{ job.get('job-printer-location', '') }}</td></tr>
    </table>
-   <a class="btn btn-success float-right" href="/jobs">Return to Jobs List</a>
+   <a class="btn btn-success float-end" href="/jobs">Return to Jobs List</a>
  {% endif %}
  {% endblock %}
 
