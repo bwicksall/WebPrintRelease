@@ -1,13 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class='jumbotron text-center'>
+  <div class='p-5 mb-4 bg-body-tertiary rounded-3 text-center'>
     <h1>Web Print Release</h1>
     <p class='lead'>Print release system for CUPS!</p>
     {% if session.logged_in == NULL %}
       <a href="/login" class="btn btn-primary btn-lg"><i class="fa fa-sign-in"></i> Login</a>
     {% else %}
-      <a href="/jobs" class="btn btn-primary btn-lg">Active Jobs</a>
+      <a href="/jobs" class="btn btn-primary btn-lg me-2 mb-2 mb-md-0">Active Jobs</a>
       <a href="/jobscompleted" class="btn btn-primary btn-lg">Job History</a>
     {% endif %}
   </div>
