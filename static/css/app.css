@@ -11,12 +11,17 @@
 
 .navbar-custom .nav-link:hover,
 .navbar-custom .nav-link:focus,
-.navbar-custom .nav-link.active,
 .navbar-custom .navbar-brand:hover,
 .navbar-custom .navbar-brand:focus,
 .navbar-custom .dropdown-toggle:hover,
 .navbar-custom .dropdown-toggle:focus {
   color: #d6e8ff;
+}
+
+.navbar-custom .nav-link.active {
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: 2px solid #ffffff;
 }
 
 .navbar .dropdown-menu {
