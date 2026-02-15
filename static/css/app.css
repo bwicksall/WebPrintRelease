@@ -3,7 +3,7 @@
 }
 
 .navbar .nav-login-link {
-  padding-right: 1em;
+  padding-right: 1em !important;
 }
 
 .table td form {
